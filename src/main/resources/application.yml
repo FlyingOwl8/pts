@@ -1,0 +1,31 @@
+
+server:
+  port: 8005
+
+
+security:
+  jwt:
+    secret-key: bXRzQFNFY1JldDM0NDU3NjU4NDZ8bXRzQFNFY1JldDM0NDU3NjU4NDZ8bXRzQFNFY1JldDM0NDU3NjU4NDZ8bXRzQFNFY1JldDM0NDU3NjU4NDZ8
+    expiration-time: 3600000
+    refresh-expiration-time: 86400000
+
+app:
+  tests:
+    test-question-number: 2
+
+spring:
+  sql.init.mode: always
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    user: customer
+    password: 1234
+    baseline-on-migrate: true
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/test
+    username: customer
+    password: 1234
+  jpa:
+    defer-datasource-initialization: false
+    hibernate.ddl-auto: none
