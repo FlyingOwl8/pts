@@ -8,6 +8,7 @@ import org.example.data.repository.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -28,6 +29,7 @@ public class TestQuestionService {
 
     private final EntityDTOMapper entityDTOMapper;
 
+    @Transactional
     public TestQuestionDTO getTestQuestionById(Integer questionId) {
         Optional<TestQuestion> testQuestionOptional = testQuestionRepository.findById(questionId);
         if (testQuestionOptional.isEmpty()) {
@@ -71,7 +73,7 @@ public class TestQuestionService {
                 .toList();
     }
 
-
+    @Transactional
     public Integer createTest(
             Integer userId) {
         Test test = new Test();
@@ -84,6 +86,7 @@ public class TestQuestionService {
     }
 
 
+    @Transactional
     public TestDataForSending generateTestQuestions(Integer savedTestId) {
         Integer userId = testRepository.findById(savedTestId).get().getUserId();
         Integer postId = userRepository.findById(userId).get().getPostId();
@@ -95,6 +98,7 @@ public class TestQuestionService {
         return new TestDataForSending(savedTestId, testQuestionDataForSendingList);
     }
 
+    @Transactional
     public void saveTestQuestionResponse(TestQuestionResponseDTO testQuestionResponseDTO) {
 
         try {
@@ -113,6 +117,7 @@ public class TestQuestionService {
         }
     }
 
+    @Transactional
     public void checkIfTestMatchesUserAndStatus(Integer testId) {
         Test test = testRepository.findById(testId).get();
         if (test.getStatusId() != 1) {
@@ -120,6 +125,7 @@ public class TestQuestionService {
         }
     }
 
+    @Transactional
     public void saveTestQuestionResponses(TestResponseForSending testResponse) {
         Integer testId = testResponse.getTestId();
 
@@ -138,6 +144,7 @@ public class TestQuestionService {
         testRepository.save(test);
     }
 
+    @Transactional
     public float checkTestQuestionResponse(TestQuestionResponse testQuestionResponse) {
         TestQuestion testQuestion = testQuestionRepository.findById(testQuestionResponse.getQuestionId()).get();
         if (testQuestion.isAnswerAccuracy1() == testQuestionResponse.isUserResponse1() &&
@@ -151,6 +158,7 @@ public class TestQuestionService {
         }
     }
 
+    @Transactional
     public float calculateUserTestResult(Integer testId) {
         List<TestQuestionResponse> testQuestionResponses = testQuestionResponseRepository.findByTestId(testId);
         float result = 0;
@@ -160,6 +168,7 @@ public class TestQuestionService {
         return result;
     }
 
+    @Transactional
     public void saveUserTestResult(Integer testId) {
         Test test = testRepository.findById(testId).get();
         if (test.getStatusId() != 2) {
@@ -185,6 +194,7 @@ public class TestQuestionService {
         testRepository.save(test);
     }
 
+    @Transactional
     public TestDTO getTestDataById(Integer testId) {
         Test test = testRepository.findById(testId).get();
         System.out.println(test);
@@ -193,12 +203,14 @@ public class TestQuestionService {
         return testDTO;
     }
 
+    @Transactional
     public List<TestDTO> getTestsDataForUser(Integer userId) {
         List<Test> testList = testRepository.findTestsByUserId(userId);
         List<TestDTO> testDTOList = entityDTOMapper.toListTestDTO(testList);
         return testDTOList;
     }
 
+    @Transactional
     public List<TestQuestionResponseDTO> getTestResponses(Integer testId) {
         return testQuestionResponseRepository.findByTestId(testId).stream()
                 .map(entityDTOMapper::toTestQuestionResponseDTO)

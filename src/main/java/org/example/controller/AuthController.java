@@ -1,5 +1,7 @@
 package org.example.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.example.data.dto.responses.LoginResponse;
 import org.example.data.dto.security.AuthorizationToken;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "AuthController", description = "выполняет операции аутентификации")
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -21,6 +24,10 @@ public class AuthController {
     private final JwtService jwtService;
     private final AuthTokenValidationService authTokenValidationService;
 
+    @Operation(
+            summary = "Аутентификация пользователя",
+            description = "Позволяет аутентифицировать пользователя"
+    )
     // Аутентификация пользователя
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginUserDTO authRequest) {
@@ -44,6 +51,10 @@ public class AuthController {
         }
     }
 
+    @Operation(
+            summary = "Обновление токена доступа",
+            description = "Позволяет обновить токен доступа"
+    )
     @PostMapping("/refresh")
     public ResponseEntity<?> refreshToken(@RequestBody String accessToken) {
         try {
